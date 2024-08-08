@@ -6,7 +6,7 @@ const getPokemons = async (limit= 20, offset= 0) => {
 }
 
 export default async function PokemonsPage() {
-  const pokemons = await getPokemons();
+  const pokemons = await getPokemons(151);
 
   return (
     <div>
