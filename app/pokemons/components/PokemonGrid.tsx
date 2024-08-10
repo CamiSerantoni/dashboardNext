@@ -1,14 +1,16 @@
 import { SimplePokemon } from "../interfaces/simple-pokemon"
+import { PokemonCard } from './PokemonCard';
 
 interface Props { 
     pokemons: SimplePokemon[]
 }
 
-const PokemonGrid = ({pokemons}: Props) => {
+export const PokemonGrid = ({pokemons}: Props) => {
   return (
     <div className='flex flex-wrap  gap-10 items-center justify-center'>
     {
     pokemons.map(pokemon => (
+        <PokemonCard key={pokemon.id}/>
     //    <Image 
     //    key={pokemon.id}
     //       src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg`}
@@ -16,7 +18,7 @@ const PokemonGrid = ({pokemons}: Props) => {
     //       height={100}
     //       alt={pokemon.name}
     //       />)
-    <span key={pokemon.id}>asdasdasd</span>
+    // <span key={pokemon.id}>asdasdasd</span>
     
     ))
     }
@@ -29,4 +31,3 @@ const PokemonGrid = ({pokemons}: Props) => {
   )
 }
 
-export default PokemonGrid

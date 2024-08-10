@@ -1,4 +1,4 @@
-import { PokemonsResponse } from '@/app/pokemons';
+import { PokemonGrid, PokemonsResponse } from '@/app/pokemons';
 import { SimplePokemon } from '../../pokemons/interfaces/simple-pokemon';
 import Image from 'next/image';
 
@@ -20,7 +20,7 @@ export default async function PokemonsPage() {
   return (
     <div className='flex flex-col'>
       <span className='text-5xl my-2 '>Listado de Pokémons <small>estático</small>  </span>
-
+<PokemonGrid pokemons={pokemons}/>
     </div>
   );
 }
