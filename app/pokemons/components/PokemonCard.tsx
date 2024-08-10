@@ -22,6 +22,7 @@ const {id, name} = pokemon;
           width={100}
           height={100}
           alt={pokemon.name}
+         
           />
             <path
               fill="currentColor"
