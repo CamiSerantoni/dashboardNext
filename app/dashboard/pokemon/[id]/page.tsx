@@ -1,8 +1,15 @@
 
-export default function PokemonPage() {
-  return (
+interface Props {
+    params: {id: string}
+}
+
+export default function PokemonPage({params} : Props) {
+  
+//   console.log({props})
+  
+    return (
     <div>
-      <h1>Pokemon page</h1>
+      <h1>Pokemon {params.id}</h1>
     </div>
   );
 }
