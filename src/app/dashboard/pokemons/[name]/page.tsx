@@ -1,52 +1,85 @@
 
-
-import { Pokemon } from "@/app/pokemons";
-import { Metadata, ResolvedMetadata } from "next";
+import { Pokemon } from "@/src/pokemons";
+import { Metadata} from "next";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
+
+// Este vendría a ser un server compponent al no decir en ninguna parte "use-client" por lo que por defecto lo hace ser un server compoent 
 interface Props {
-    params: {id: string}
+  params: { name: string };
 }
 
-export async function generateMetadata({params}:Props,  parent: ResolvedMetadata): Promise<Metadata> {
+
+//Solo se ejecutará en build Time 
+export async function generateStaticParams() {  
+
+const static151Pokemons = Array.from({length: 151}).map((v, i) => `${i +1}`) 
+
+return static151Pokemons.map(id => ({
+  
+      id: id
+    }))
+}
 
 
-  const {id, name } = await  getPokemon(params.id)
 
 
-   
+
+export async function generateMetadata(
+  { params }: Props): Promise<Metadata> {
   
-    return {
+  try {
+       const { id, name } = await getPokemon(params.name);
+       
+       return {
+        title: `Pokemon ${id} - ${name}`,
+
+        description: `Informacion del pokemon ${name}`,
+       }
+  }catch(error){
+  return {
+    title: `Error al obtener el pokemon`,
+    description: `Error al obtener la informacion del pokemon`,
+  }
+    
+   };
+}
+
+
+
+const getPokemon = async (name: string): Promise<Pokemon> => {
   
-      title: `Pokemon ${id} - ${name}`,
+  try{
+
+ const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`, {
+    // cache: "force-cache"// TODO: cambiar a futuro
+    next: {
+      revalidate: 60 * 60 * 30 * 6,
+    },
+  }).then((res) => res.json());
+
+   console.log("SE CARGÓ:", pokemon.name);
+  return pokemon;
+
+
+  } catch(error){
   
-      description: `Informacion del pokemon ${name}`
+  notFound()
   
-    } 
   
   }
+  
+  
 
-
-const getPokemon= async (id: string): Promise<Pokemon> => {   
-
-const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {
-    
-//cache: "force-cache"// TODO: cambiar a futuro
-next:{
-  revalidate: 60 * 60 *30 * 6
-}
-}).then(res => res.json());
-
-console.log('SE CARGÓ:', pokemon.name)
-return pokemon
-
-}
-
+  
+  
+  
+ 
+};
 
 export default async function PokemonPage({ params }: Props) {
-
-  const pokemon = await getPokemon(params.id);
-  
+  const pokemon = await getPokemon(params.name);
 
   return (
     <div className="flex mt-5 flex-col items-center text-slate-800">
@@ -57,49 +90,44 @@ export default async function PokemonPage({ params }: Props) {
           </h1>
           <div className="flex flex-col justify-center items-center">
             <Image
-              src={pokemon.sprites.other?.dream_world.front_default ?? ''}
+              src={pokemon.sprites.other?.dream_world.front_default ?? ""}
               width={150}
               height={150}
               alt={`Imagen del pokemon ${pokemon.name}`}
               className="mb-5"
             />
 
-
             <div className="flex flex-wrap">
-              {
-                pokemon.moves.map(move => (
-                  <p key={move.move.name} className="mr-2 capitalize">{move.move.name}</p>
-                ))
-              }
+              {pokemon.moves.map((move) => (
+                <p key={move.move.name} className="mr-2 capitalize">
+                  {move.move.name}
+                </p>
+              ))}
             </div>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4 px-2 w-full">
-
           <div className="flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4  drop-shadow-lg ">
             <p className="text-sm text-gray-600">Types</p>
             <div className="text-base font-medium text-navy-700 flex">
-              {
-                pokemon.types.map(type => (
-                  <p key={type.slot} className="mr-2 capitalize">{type.type.name}</p>
-                ))
-              }
+              {pokemon.types.map((type) => (
+                <p key={type.slot} className="mr-2 capitalize">
+                  {type.type.name}
+                </p>
+              ))}
             </div>
           </div>
 
           <div className="flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4  drop-shadow-lg ">
             <p className="text-sm text-gray-600">Peso</p>
             <span className="text-base font-medium text-navy-700 flex">
-              {
-                pokemon.weight
-              }
+              {pokemon.weight}
             </span>
           </div>
 
           <div className="flex flex-col justify-center rounded-2xl bg-white bg-clip-border px-3 py-4  drop-shadow-lg">
             <p className="text-sm text-gray-600">Regular Sprites</p>
             <div className="flex justify-center">
-
               <Image
                 src={pokemon.sprites.front_default}
                 width={100}
@@ -113,14 +141,12 @@ export default async function PokemonPage({ params }: Props) {
                 height={100}
                 alt={`sprite ${pokemon.name}`}
               />
-
             </div>
           </div>
 
           <div className="flex flex-col justify-center rounded-2xl bg-white bg-clip-border px-3 py-4  drop-shadow-lg">
             <p className="text-sm text-gray-600">Shiny Sprites</p>
             <div className="flex justify-center">
-
               <Image
                 src={pokemon.sprites.front_shiny}
                 width={100}
@@ -134,12 +160,8 @@ export default async function PokemonPage({ params }: Props) {
                 height={100}
                 alt={`sprite ${pokemon.name}`}
               />
-
             </div>
           </div>
-
-
-
         </div>
       </div>
     </div>

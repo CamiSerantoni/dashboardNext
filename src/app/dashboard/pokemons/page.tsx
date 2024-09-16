@@ -1,5 +1,8 @@
-import { PokemonGrid, PokemonsResponse } from '@/app/pokemons';
-import { SimplePokemon } from '../../pokemons/interfaces/simple-pokemon';
+// import { PokemonGrid, PokemonsResponse } from '@/src/app/pokemons';
+// import { SimplePokemon } from '../../pokemons/interfaces/simple-pokemon';
+import { SimplePokemon } from '@/src/pokemons';
+import { PokemonGrid, PokemonsResponse } from '@/src/pokemons';
+
 import Image from 'next/image';
 
 const getPokemons = async (limit= 20, offset= 0) :Promise <SimplePokemon[]> => {
