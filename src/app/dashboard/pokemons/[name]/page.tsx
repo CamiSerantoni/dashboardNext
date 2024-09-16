@@ -1,5 +1,5 @@
 
-import { Pokemon } from "@/src/pokemons";
+import { Pokemon, PokemonsResponse } from "@/src/pokemons";
 import { Metadata} from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -11,18 +11,30 @@ interface Props {
 }
 
 
-//Solo se ejecutará en build Time 
-export async function generateStaticParams() {  
+// //Solo se ejecutará en build Time 
+// export async function generateStaticParams() {  
 
-const static151Pokemons = Array.from({length: 151}).map((v, i) => `${i +1}`) 
+// const static151Pokemons = Array.from({length: 151}).map((v, i) => `${i +1}`) 
 
-return static151Pokemons.map(id => ({
+// return static151Pokemons.map(id => ({
   
-      id: id
-    }))
+//       name: name    }))
+// }
+
+export async function generateStaticParams() {
+ 
+  const data: PokemonsResponse = await fetch( `https://pokeapi.co/api/v2/pokemon?limit=151` )
+      .then( res => res.json() );
+
+  const static151Pokemons = data.results.map( pokemon => ( {
+      name: pokemon.name,
+  } ) );
+
+  return static151Pokemons.map( ( { name } ) => ( {
+      name: name
+  } ) );
+
 }
-
-
 
 
 
