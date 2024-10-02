@@ -13,15 +13,15 @@ interface PokemonsState {
 }
 
 const initialState = {
-
+'1': {id:'1', name: 'bulbasaur'},
 }
 
 const pokemonsSlice = createSlice({
-  name: second,
+  name: 'pokemons',
   initialState,
   reducers: {}
 });
 
-export const {} = pokemonsSlice.actions
+export const { } = pokemonsSlice.actions
 
 export default pokemonsSlice.reducer
