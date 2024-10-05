@@ -10,15 +10,19 @@ import { SimplePokemon } from "@/src/pokemons";
 */
 
 interface PokemonsState {
-  [key: string]: SimplePokemon;
+ favorites:{ [key: string]: SimplePokemon};
 }
-const getInitialState = (): PokemonsState => {
-  const favorites= JSON.parse(localStorage.getItem('favorites-pokemons') ?? '{}'); 
-return favorites
-}
+// const getInitialState = (): PokemonsState => {
+ 
+//   // if (typeof localStorage === 'undefined' ) return {};
+ 
+//   const favorites= JSON.parse(localStorage.getItem('favorites-pokemons') ?? '{}'); 
+// return favorites
+// }
 
-const initialState = {
-...getInitialState()
+const initialState: PokemonsState = {
+  favorites:{},
+// ...getInitialState()
 };
 
 
@@ -30,14 +34,14 @@ const pokemonsSlice = createSlice({
       const pokemon = action.payload;
       const { id } = pokemon;
 
-      if (!!state[id]) {
-        delete state[id];
+      if (!!state.favorites[id]) {
+        delete state.favorites[id];
       
       }else {
-         state[id] = pokemon;
+         state.favorites[id] = pokemon;
       }
       // TODO no se debe hacer en redux
-     localStorage.setItem('favorites-pokemons', JSON.stringify(state));
+     localStorage.setItem('favorites-pokemons', JSON.stringify(state.favorites));
     },
   },
 });
